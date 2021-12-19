@@ -31,15 +31,15 @@ def get_user_info():
                         credentials=credentials)
     return oauth2_client.userinfo().get().execute()
 
-def build_credentials():
-    if not is_logged_in():
-        raise Exception('User must be logged in')
+def build_credentials(token):
+    # if not is_logged_in():
+    #     raise Exception('User must be logged in')
 
-    oauth2_tokens = flask.session[AUTH_TOKEN_KEY]
+    # oauth2_tokens = flask.session[AUTH_TOKEN_KEY]
     
     return google.oauth2.credentials.Credentials(
-                oauth2_tokens['access_token'],
-                refresh_token=oauth2_tokens['refresh_token'],
+                token,
+                refresh_token=token,
                 client_id=CLIENT_ID,
                 client_secret=CLIENT_SECRET,
                 token_uri=ACCESS_TOKEN_URI)
@@ -92,8 +92,9 @@ def google_auth_redirect():
         flask.session[AUTH_TOKEN_KEY] = oauth2_tokens
     except KeyError:
         return "Login state not found"
-
-    return flask.redirect(BASE_URI, code=302)
+    test = f'{BASE_URI}/?token={oauth2_tokens["refresh_token"]}'
+    
+    return flask.redirect(test, code=302)
 
 @app.route('/hordanso-google/logout')
 @no_cache

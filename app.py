@@ -32,7 +32,6 @@ def index():
         if drive_google_auth.is_logged_in():
             user_info = drive_google_auth.get_user_info()
             return '<div>You are currently logged in as ' + user_info['given_name'] + '<div><pre>' + json.dumps(user_info, indent=4) + "</pre>"
-
         return 'You are not currently logged in.'
     except KeyError:
         return 'You are not currently logged in.' 
@@ -48,7 +47,6 @@ def list_drive_file():
 @app.route('/create-folder', methods=['POST', 'GET'])
 def create_drive_folder():
     folder_name = flask.request.args.get('folder-name')
-    folder
     file_metadata = {
     'name': folder_name,
     'mimeType': 'application/vnd.google -apps.folder'
@@ -61,8 +59,7 @@ def upload_file():
 
     if flask.request.method == 'POST':
         file_to_upload = flask.request.files.get('file')
-        print(flask.request.files)
-        print(file_to_upload)
+        token = flask.request.args.get('token')
         if (not file_to_upload):
             return 'File not given'
         
@@ -74,6 +71,6 @@ def upload_file():
     fp.seek(0)
 
     mime_type = flask.request.headers['Content-Type']
-    drive_google.save_file(filename, mime_type, fp)
-    folder_id = flask.request.args.get('folder-id')
+    file_id = drive_google.save_file(filename, mime_type, fp, token)
+    return "file id --> " + file_id
     
