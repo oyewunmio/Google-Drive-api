@@ -2,6 +2,8 @@ import io
 import tempfile
 
 import flask
+from flask_cors import CORS
+
 
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import googleapiclient.discovery
@@ -9,7 +11,8 @@ from drive_google_auth import build_credentials, get_user_info
 
 from werkzeug.utils import secure_filename
 
-app = flask.Blueprint('drive_google', __name__)
+# app = flask.Blueprint('drive_google', __name__)
+# CORS(app)
 
 def build_drive_api_v3(token):
     credentials = build_credentials(token)
